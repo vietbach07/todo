@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import Title from "../../components/Title";
@@ -8,8 +8,9 @@ import Todo from "./components/Todo";
 
 const TodoList = props => {
     const [todoList, setTodoList] = useState([])
-    const [checked, setChecked] = useState()
+    const [checked, setChecked] = useState({})
     const [showBulk, setShowBulk] = useState()
+
     const searchText = useRef()
 
     useEffect(() => {
@@ -35,9 +36,9 @@ const TodoList = props => {
         setTodoList(result)
     }
 
-    const onCheck = (id, checked) => {
+    const onCheck = useCallback((id, checked) => {
         setChecked(e => ({ ...e, [id]: checked }))
-    }
+    }, [])
 
     const onRemove = () => {
         let ids = Object.keys(checked)
@@ -59,7 +60,7 @@ const TodoList = props => {
             <br />
             <Input placeholder='Search ...' onChange={onSearch} />
             <br />
-            {todoList.map(todo => <Todo key={todo.id} todo={todo} onCheck={onCheck} />)}
+            {todoList.map(todo => <Todo key={todo.id} todo={todo} checked={checked[todo.id]} onCheck={onCheck} />)}
         </div>
         {showBulk && <div style={{ backgroundColor: '#E0E0E0', display: 'flex', justifyContent: 'center', padding: '10px 20px' }}>
             <div style={{ flex: 1, margin: 'auto' }}>

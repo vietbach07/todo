@@ -5,10 +5,14 @@ import { dispatchEvent } from "../../../utils/common";
 import TaskForm from "./TaskForm";
 
 const Todo = props => {
-    const { todo, onCheck } = props
+    const { todo, checked, onCheck } = props
     const { id, name } = todo
-
+    console.log(id, 'rerender')
     const [task, setTask] = useState()
+
+    const onSelect = e => {
+        onCheck && onCheck(id, !checked)
+    }
 
     const onUpdate = () => {
         const result = onGetTaskById(id)
@@ -23,7 +27,12 @@ const Todo = props => {
     return <div style={{ marginBottom: 20 }}>
         <div style={{ border: '1px solid black', padding: 10, display: 'flex', justifyContent: 'center' }}>
             <div >
-                <input type='checkbox' style={{ height: '100%' }} onChange={e => onCheck && onCheck(id, e.target.checked)} />
+                <input
+                    type='checkbox'
+                    style={{ height: '100%' }}
+                    checked={checked}
+                    onChange={onSelect}
+                />
             </div>
             <div style={{ flex: 1, margin: 'auto' }}>
                 <p style={{ margin: '0 20px' }}>{name}</p>
